@@ -35,7 +35,8 @@ p {
     border-radius: 6px;
     padding: 12px 8px;
     background-color: #36445b;
-    cursor: pointer
+    cursor: pointer;
+    text-decoration: unset;
 }
 
 .element > p {

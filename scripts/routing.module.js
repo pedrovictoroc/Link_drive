@@ -10,27 +10,50 @@ const router = [
 
 function routing(){
     const route = window.location
-    const hasOwner = route.search.indexOf("?owner=")
 
-    if(hasOwner == -1){
-        window.location = '/teste'
-    }
+    const search = route.search.replace("?", "")
+    let owner = ""
+    let path = ""
 
-    let owner = route.search.replace("?owner=", "")
-
-    const hasPath = route.search.indexOf("?path=")
-
-    if(hasPath != -1){
-        const search = route.search.slice(hasPath, route.search.length)
-        console.log(search)
-        owner = search.replace("?path=", "")
+    if(search.indexOf("&") != -1){
+        const splited = search.split("&")
+        splited.map((param) => {
+            if(param.indexOf("owner=") != -1){
+                owner = param.replace("owner=", "")
+            }
+            if(param.indexOf("path=") != -1){
+                path = param.replace("path=", "")
+            }
+        })
+    }else{
+        if(search.indexOf("owner=") != -1){
+            owner = search.replace("owner=", "")
+        }
     }
 
     let list = elements.filter((el) => el.owner == owner)
+    if(!!path){
+        if(path.indexOf('-') != -1){
+            let listPath = path.split('-')
+            let listCopy = list
 
-    console.log(owner)
-    console.log(list)
+            listCopy = listCopy[0].elements
 
+            for(let i = 0; i< listPath.length; i++){
+                listCopy.map((el) => {
+                    if(el.type =="folder" && el.folderId == listPath[i]){
+                        listCopy = el.elements
+                    }
+                })
+            }
+
+            list = listCopy
+
+        }else{
+            list = list[0].elements
+        }
+    }
+    
     switch(route.pathname){
         case "/":        
             generateElementList(list)
