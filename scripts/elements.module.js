@@ -2,6 +2,7 @@ import { elements } from './displayableElements.js'
 
 const folderSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/folder.svg`
 const linkSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/link.svg`
+const trashSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/trash.svg`
 
 function createNewItem(){
     const name = document.getElementById("name").value
@@ -108,14 +109,18 @@ function generateElement(list, element){
         As a workaround we use the raw user content URL provided by GitHub 
         when we push images to a repository
     */
-    const image = document.createElement("img")
-    image.src = `${element.type == "folder" ? folderSvg : linkSvg}`
+    const iconImg = document.createElement("img")
+    iconImg.src = `${element.type == "folder" ? folderSvg : linkSvg}`
 
     const p = document.createElement("p")
     p.innerHTML = element.name
 
-    container.appendChild(image)
+    const deleteImg = document.createElement("img")
+    deleteImg.src = `${trashSvg}`
+
+    container.appendChild(iconImg)
     container.appendChild(p)
+    container.appendChild(deleteImg)
     list.appendChild(container)
 }
 
