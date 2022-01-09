@@ -28,9 +28,9 @@ function createNewItem(){
         }
     }
 
-    let elements = JSON.parse(sessionStorage.getItem('elements'))
+    let elements = JSON.parse(localStorage.getItem('elements'))
     elements = [elements]
-
+    console.log(owner, elements)
     let list = elements.filter((el) => el.owner == owner)
     if(!!path){
         if(path.indexOf('-') != -1){
@@ -57,7 +57,7 @@ function createNewItem(){
 
     if(type == "link"){
         list.push({
-            "id": new Date(),
+            "id": Date.now(),
             "owner": owner,
             "name": name,
             "type": type,
@@ -66,15 +66,16 @@ function createNewItem(){
     }
     if(type == "folder"){
         list.push({
-            "id": new Date(),
+            "id": Date.now(),
             "name": name,
-            "folderId": new Date(),
+            "folderId": Date.now(),
             "type": type,
             "elements": []
         })
     }
     
     localStorage.setItem('elements', JSON.stringify(elements[0]))
+    window.location.reload()
 }
 
 function generateElement(list, element){
