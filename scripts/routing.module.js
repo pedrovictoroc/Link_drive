@@ -1,12 +1,4 @@
-import { elements } from "./displayableElements.js"
 import { generateElementList } from './elements.module.js'
-
-const router = [
-    {
-        "route": "/",
-        "render": generateElementList
-    }
-]
 
 function routing(){
     const route = window.location
@@ -30,6 +22,9 @@ function routing(){
             owner = search.replace("owner=", "")
         }
     }
+
+    let elements = JSON.parse(localStorage.getItem('elements'))
+    elements = [elements]
 
     let list = elements.filter((el) => el.owner == owner)
     if(!!path){

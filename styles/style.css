@@ -42,3 +42,18 @@ p {
 .element > p {
     margin-left: 10px;
 }
+
+.addElement {
+    background-color: #3A52EE; 
+    border-radius: 8px; 
+    width: 100%; 
+    display:flex; 
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+}
