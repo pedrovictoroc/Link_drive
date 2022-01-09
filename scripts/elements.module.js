@@ -1,3 +1,6 @@
+const folderSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/folder.svg`
+const linkSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/link.svg`
+
 function generateElement(list, element){
         const container = document.createElement("a")
         container.style.color = "unset"
@@ -13,7 +16,7 @@ function generateElement(list, element){
         container.classList.add("element")
     
         const image = document.createElement("img")
-        image.src = `/images/${element.type}.svg`
+        image.src = `${element.type == "folder" ? folderSvg : linkSvg}`
     
         const p = document.createElement("p")
         p.innerHTML = element.name
