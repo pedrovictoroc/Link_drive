@@ -112,15 +112,23 @@ function generateElement(list, element){
     const iconImg = document.createElement("img")
     iconImg.src = `${element.type == "folder" ? folderSvg : linkSvg}`
 
+    const innerContainer = document.createElement("div")
+    innerContainer.style.width = "100%"
+    innerContainer.style.display = "flex"
+    innerContainer.style.justifyContent = "space-between"
+
     const p = document.createElement("p")
     p.innerHTML = element.name
 
     const deleteImg = document.createElement("img")
     deleteImg.src = `${trashSvg}`
+    deleteImg.style.width = "32px"
+
+    innerContainer.appendChild(p)
+    innerContainer.appendChild(deleteImg)
 
     container.appendChild(iconImg)
-    container.appendChild(p)
-    container.appendChild(deleteImg)
+    container.appendChild(innerContainer)
     list.appendChild(container)
 }
 
