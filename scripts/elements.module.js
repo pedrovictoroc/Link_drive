@@ -2,7 +2,64 @@ import { elements } from './displayableElements.js'
 
 const folderSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/folder.svg`
 const linkSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/link.svg`
-const trashSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/trash.svg`
+const trashSvg = `https://raw.githubusercontent.com/pedrovictoroc/Link_drive/main/images/trashCan.svg`
+
+
+function removeElement(event){
+    const toBeRemovedId = event.target.id
+    const route = window.location
+
+    const search = route.search.replace("?", "")
+    let owner = ""
+    let path = ""
+    if(search.indexOf("&") != -1){
+        const splited = search.split("&")
+        splited.map((param) => {
+            if(param.indexOf("owner=") != -1){
+                owner = param.replace("owner=", "")
+            }
+            if(param.indexOf("path=") != -1){
+                path = param.replace("path=", "")
+            }
+        })
+    }else{
+        if(search.indexOf("owner=") != -1){
+            owner = search.replace("owner=", "")
+        }
+    }
+
+    let elements = JSON.parse(localStorage.getItem('elements'))
+    elements = [elements]
+    
+    let list = elements.filter((el) => el.owner == owner)
+    if(!!path){
+        if(path.indexOf('-') != -1){
+            let listPath = path.split('-')
+            let listCopy = list
+
+            listCopy = listCopy[0].elements
+
+            for(let i = 0; i< listPath.length; i++){
+                listCopy.map((el) => {
+                    if(el.type =="folder" && el.folderId == listPath[i]){
+                        listCopy = el.elements
+                    }
+                })
+            }
+
+            list = listCopy
+
+        }else{
+            list = list[0].elements
+        }
+    }
+
+    // For logging pourpouse we will not delete, just hide elements
+    list.map((el) => el.visible = (el.id.toString() == toBeRemovedId || !el.visible) ? false : true)
+
+    localStorage.setItem('elements', JSON.stringify(elements[0]))
+    window.location.reload()
+}
 
 function createNewItem(){
     const name = document.getElementById("name").value
@@ -31,7 +88,7 @@ function createNewItem(){
 
     let elements = JSON.parse(localStorage.getItem('elements'))
     elements = [elements]
-    console.log(owner, elements)
+
     let list = elements.filter((el) => el.owner == owner)
     if(!!path){
         if(path.indexOf('-') != -1){
@@ -54,7 +111,6 @@ function createNewItem(){
             list = list[0].elements
         }
     }
-    console.log(list)
 
     if(type == "link"){
         list.push({
@@ -62,7 +118,8 @@ function createNewItem(){
             "owner": owner,
             "name": name,
             "type": type,
-            "to": link
+            "to": link,
+            "visible": true
         })
     }
     if(type == "folder"){
@@ -71,7 +128,8 @@ function createNewItem(){
             "name": name,
             "folderId": Date.now(),
             "type": type,
-            "elements": []
+            "elements": [],
+            "visible": true
         })
     }
     
@@ -80,12 +138,21 @@ function createNewItem(){
 }
 
 function generateElement(list, element){
-    
+
+    if(!element.visible){
+        return
+    }
+
+    const container = document.createElement("div")
+    container.style.display = "flex"
+
     /*  As we need to redirect our user, we should use
         the HTML element 'a', so we remove they styles before anything ele
     */
-    const container = document.createElement("a")
-    container.style.color = "unset"
+    const innerContainer = document.createElement("a")
+    innerContainer.style.color = "unset"
+    innerContainer.style.width = "100%"
+    innerContainer.style.display = "flex"
 
     /*  We have two type os redirects, one is the Link
         leting us move to another tab with the desired content.
@@ -94,15 +161,15 @@ function generateElement(list, element){
     */
 
     if(element.type == "folder"){
-        container.addEventListener("click", () =>{
+        innerContainer.addEventListener("click", () =>{
             window.location.search = window.location.search + `-${element.folderId}` 
         })
     }else {
-        container.href = element.to
-        container.target = "_blank"
+        innerContainer.href = element.to
+        innerContainer.target = "_blank"
     }
 
-    container.classList.add("element")
+    innerContainer.classList.add("element")
 
     /*  Just decide the properly SVG, we are currently hosting
         this project on GitHubPages, so we can't use heavy images or SVGs.
@@ -112,23 +179,24 @@ function generateElement(list, element){
     const iconImg = document.createElement("img")
     iconImg.src = `${element.type == "folder" ? folderSvg : linkSvg}`
 
-    const innerContainer = document.createElement("div")
-    innerContainer.style.width = "100%"
-    innerContainer.style.display = "flex"
-    innerContainer.style.justifyContent = "space-between"
-
     const p = document.createElement("p")
     p.innerHTML = element.name
 
     const deleteImg = document.createElement("img")
     deleteImg.src = `${trashSvg}`
     deleteImg.style.width = "32px"
+    deleteImg.style.cursor = "pointer"
+    deleteImg.id = element.id
 
+    deleteImg.addEventListener("click",removeElement)
+
+
+    innerContainer.appendChild(iconImg)
     innerContainer.appendChild(p)
-    innerContainer.appendChild(deleteImg)
-
-    container.appendChild(iconImg)
+    
     container.appendChild(innerContainer)
+    container.appendChild(deleteImg)
+
     list.appendChild(container)
 }
 

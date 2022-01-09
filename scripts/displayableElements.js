@@ -4,6 +4,15 @@ export const elements = [
         "folderId": "1",
         "name": "Home",
         "elements": [
+        ]
+    }
+]
+/*export const elements = [
+    {
+        "owner": "123",
+        "folderId": "1",
+        "name": "Home",
+        "elements": [
             {
                 "id": "54325",
                 "name": "Teste",
@@ -11,6 +20,7 @@ export const elements = [
                 "type": "folder",
                 "elements": [
                     {
+                        "id": "54325",
                         "owner": "123",
                         "folderId": "3",
                         "name": "Teste 2",
@@ -39,6 +49,7 @@ export const elements = [
                                     {
                                         "owner": "123",
                                         "folderId": "5",
+                                        "id": "54325",
                                         "type": "folder",
                                         "name": "Teste",
                                         "elements": [
@@ -80,4 +91,4 @@ export const elements = [
             }
         ]
     }
-]
+]*/
